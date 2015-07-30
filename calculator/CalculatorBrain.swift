@@ -89,7 +89,7 @@ class CalculatorBrain {
         knownOps["×"] = Op.BinaryOperation("×", *)
         knownOps["÷"] = Op.BinaryOperation("÷", { $1 / $0 })
         knownOps["+"] = Op.BinaryOperation("+", +)
-        knownOps["-"] = Op.BinaryOperation("-", { $1 - $0 })
+        knownOps["−"] = Op.BinaryOperation("−", { $1 - $0 })
         knownOps["√"] = Op.UnaryOperation("√", sqrt)
         knownOps["sin"] = Op.UnaryOperation("sin", sin)
         knownOps["cos"] = Op.UnaryOperation("cos", cos)
@@ -184,6 +184,13 @@ class CalculatorBrain {
     }
     
     func isOp(op: String) -> Bool {
+//        if knownOps[op] != nil {
+//            print("string is an op! \(op)")
+//            return true
+//        } else {
+//            print("string is not an op! \(op)")
+//            return false
+//        }
         return knownOps[op] != nil
     }
     
@@ -196,7 +203,8 @@ class CalculatorBrain {
     }
     
     func evaluate() -> Double? {
-        println(infixOpStack);
+        print("beginning");
+        print(infixOpStack);
         opStack = infixToRPN(infixOpStack)
         let result = evaluate(opStack)
         infixOpStack = [Op]()

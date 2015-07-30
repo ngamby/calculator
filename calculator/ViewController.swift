@@ -26,6 +26,16 @@ class ViewController: UIViewController { // single inheritance only
         //func = says its a method
         // "sender" name of param, "UIButton" = type of param
         let char = sender.currentTitle!
+        if userIsAboutToEnterANewCalculation && brain.isOp(char) {
+             if let num = NSNumberFormatter().numberFromString(Display.text!) {
+                brain.pushOperand(num.doubleValue)
+                brain.pushOperation(char)
+                numStr=""
+                Display.text = Display.text! + char
+                userIsAboutToEnterANewCalculation = false
+                return
+            }
+        }
         if userIsAboutToEnterANewCalculation {
             Display.text = ""
             userIsAboutToEnterANewCalculation = false
@@ -56,7 +66,8 @@ class ViewController: UIViewController { // single inheritance only
             }
         }
         UserIsInTheMiddleOfTypingANumber = false
-        Display.text = NSNumberFormatter().stringFromNumber(brain.evaluate()!)!
+        var num = brain.evaluate()!
+        Display.text = num.description
         userIsAboutToEnterANewCalculation = true
         
     }
