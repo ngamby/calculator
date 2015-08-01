@@ -131,7 +131,7 @@ class CalculatorBrain {
     }
     
     
-    private struct Stack {
+    private struct Stack: Printable {
         var items = [Op]()
         mutating func push(item: Op) {
             items.append(item)
@@ -142,12 +142,21 @@ class CalculatorBrain {
         func peek() -> Op? {
             return items.last
         }
+        var description: String {
+            var ret = "[ "
+            for op in items {
+                ret += op.description + " "
+            }
+            ret += "]"
+            return ret;
+        }
     }
     
     private func infixToRPN(ops: [Op]) -> [Op] {
         var opStack = Stack()
         var returnOps = [Op]()
-        for op in ops {
+        for (index, op) in enumerate(ops) {
+            println(index);
             switch op {
             case .Constant:
                 returnOps.append(op)
@@ -159,16 +168,19 @@ class CalculatorBrain {
                 ((op.associativity == "left" && op.precedence <= top?.precedence) ||
                 (op.associativity == "right" && op.precedence < top?.precedence))
                 {
+                    println("in loop: \(opStack)")
                     returnOps.append(opStack.pop())
                     top = opStack.peek()
                 }
                 opStack.push(op)
+                println("out of loop: \(opStack)")
             case .openParen:
                 opStack.push(op)
             case .closeParen:
-                opStack.pop() // remove close paren
+//                opStack.pop() // remove close paren
                 var top = opStack.peek()
                 while top?.isOpenParen != true && top != nil {
+                    println("close paren adding \(top)")
                     returnOps.append(opStack.pop())
                     top = opStack.peek()
                 }
@@ -177,6 +189,7 @@ class CalculatorBrain {
                 }
             }
         }
+        println("remaing opstack: \(opStack)")
         while opStack.peek() != nil {
             returnOps.append(opStack.pop())
         }
@@ -203,13 +216,16 @@ class CalculatorBrain {
     }
     
     func evaluate() -> Double? {
-        print("beginning");
-        print(infixOpStack);
+        println("infix stack: \(infixOpStack)");
         opStack = infixToRPN(infixOpStack)
+        println("opStack: \(opStack)")
         let result = evaluate(opStack)
         infixOpStack = [Op]()
         opStack = [Op]()
-        return result.result!
+        if let ans = result.result {
+            return ans
+        }
+        return 0
     }
 
 }
