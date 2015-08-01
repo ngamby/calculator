@@ -27,17 +27,17 @@ class ViewController: UIViewController { // single inheritance only
         // "sender" name of param, "UIButton" = type of param
         let char = sender.currentTitle!
         
-        if userIsAboutToEnterANewCalculation && brain.isOp(char) && Display.text! != "0.0" && Display.text! != "0" { // last part is a bit of a hack but whatever...
-            Display.text = Display.text! + char
-            userIsAboutToEnterANewCalculation = false
-            return
-        } else if userIsAboutToEnterANewCalculation || Display.text == "0.0" || Display.text == "0" {
-            Display.text = char
-            userIsAboutToEnterANewCalculation = false
-            return
+        if (userIsAboutToEnterANewCalculation || // user is about to enter a new calculation 
+            Display.text == "0.0" || // hack
+            Display.text == "0" || // hack
+            (char == "." && Display.text=="0")) // case when user sees "0" and wants to enter decimal
+            && !brain.isOp(char)   {
+                Display.text = char
         } else {
-            Display.text = Display.text! + char
+                Display.text = Display.text! + char
         }
+        userIsAboutToEnterANewCalculation = false
+        return
 //        if userIsAboutToEnterANewCalculation && brain.isOp(char) {
 //        if let num = NSNumberFormatter().numberFromString(Display.text!) {
 //        if num != 0 {
@@ -76,7 +76,8 @@ class ViewController: UIViewController { // single inheritance only
     @IBAction func deleteChar(sender: AnyObject) {
         let text = Display.text!
         let newText = text.substringToIndex(text.endIndex.predecessor())
-        if newText == "" {
+        println("text: \(text) and newText: \(newText)")
+        if newText == "" || userIsAboutToEnterANewCalculation {
             Display.text = "0"
         } else {
             Display.text = newText
@@ -108,11 +109,18 @@ class ViewController: UIViewController { // single inheritance only
         if let expression = Display.text {
             var numStr = ""
             for (index, char) in enumerate(expression) {
-                var charStr = String(char)
+                let charStr = String(char)
                 if brain.isOp(charStr) && numStr != "" {
-                    brain.pushOperand(NSNumberFormatter().numberFromString(numStr)!.doubleValue)
+                    println("current char: \(charStr) and number: \(numStr)")
+                    if let num = NSNumberFormatter().numberFromString(numStr) {
+                        brain.pushOperand(num.doubleValue)
+                    } else {
+                        println("poooooo \(numStr)")
+                    }
                     brain.pushOperation(charStr)
                     numStr = ""
+                } else if brain.isOp(charStr) {
+                    brain.pushOperation(charStr)
                 } else {
                     numStr = numStr + charStr
                 }
