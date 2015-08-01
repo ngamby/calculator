@@ -177,7 +177,6 @@ class CalculatorBrain {
             case .openParen:
                 opStack.push(op)
             case .closeParen:
-//                opStack.pop() // remove close paren
                 var top = opStack.peek()
                 while top?.isOpenParen != true && top != nil {
                     println("close paren adding \(top)")
