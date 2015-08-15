@@ -208,6 +208,18 @@ class CalculatorBrain {
 //    func isNum(op: String) -> Bool {
 //        return knownOps[op] == nil
 //    }
+    func isNum(char: String) -> Bool {
+        switch char {
+        case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": return true
+        default: return false
+        }
+    }
+    func couldBePartOfNum(char: String) -> Bool {
+        switch char {
+        case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",": return true
+        default: return false
+        }
+    }
     
     func pushOperation(op: String) {
         infixOpStack.append(knownOps[op]!)
