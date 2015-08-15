@@ -196,18 +196,8 @@ class CalculatorBrain {
     }
     
     func isOp(op: String) -> Bool {
-//        if knownOps[op] != nil {
-//            print("string is an op! \(op)")
-//            return true
-//        } else {
-//            print("string is not an op! \(op)")
-//            return false
-//        }
         return knownOps[op] != nil
     }
-//    func isNum(op: String) -> Bool {
-//        return knownOps[op] == nil
-//    }
     func isNum(char: String) -> Bool {
         switch char {
         case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": return true
@@ -219,6 +209,15 @@ class CalculatorBrain {
         case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",": return true
         default: return false
         }
+    }
+    func isUnaryOpChar(op: String) -> Bool {
+        if let Op = knownOps[op] {
+            switch Op {
+            case .UnaryOperation, .openParen, .closeParen: return true
+            default: return false
+            }
+        }
+        return false
     }
     
     func pushOperation(op: String) {

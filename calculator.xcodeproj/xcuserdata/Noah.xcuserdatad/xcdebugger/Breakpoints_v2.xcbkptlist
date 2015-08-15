@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/ViewController.swift"
-            timestampString = "461365666.537325"
+            timestampString = "461373958.334752"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "ViewController"
-            landmarkType = "3">
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "replaceLastNumberInDisplay(_:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/CalculatorBrain.swift"
-            timestampString = "461358707.188494"
+            timestampString = "461369963.232644"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
             landmarkName = "evaluate()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/CalculatorBrain.swift"
-            timestampString = "461358707.188494"
+            timestampString = "461369963.232644"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "pushOperation(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/CalculatorBrain.swift"
-            timestampString = "461358707.188494"
+            timestampString = "461369963.232644"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "pushOperand(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/ViewController.swift"
-            timestampString = "461312195.796746"
+            timestampString = "461373196.382756"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "appendDigit(_:)"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "appendChar(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -90,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/ViewController.swift"
-            timestampString = "461365666.537325"
+            timestampString = "461373196.382756"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
-            landmarkName = "convertToArray()"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "appendChar(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -106,12 +106,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "calculator/ViewController.swift"
-            timestampString = "461357227.914327"
+            timestampString = "461373958.334752"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "appendDigit(_:)"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "replaceLastNumberInDisplay(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

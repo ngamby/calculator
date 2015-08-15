@@ -8,66 +8,55 @@
 
 import UIKit
 
-extension String {
-    
-    subscript (i: Int) -> Character {
-        return self[advance(self.startIndex, i)]
-    }
-    
-    subscript (i: Int) -> String {
-        return String(self[i] as Character)
-    }
-    
-    subscript (r: Range<Int>) -> String {
-        return substringWithRange(Range(start: advance(startIndex, r.startIndex), end: advance(startIndex, r.endIndex)))
-    }
-}
-
 class ViewController: UIViewController { // single inheritance only
     //all the instance methods and variables in the class
     //properties = instance variable
     var locale = NSLocale(localeIdentifier: "en_US")
     var brain = CalculatorBrain()
     
-    @IBOutlet weak var Display: UILabel! //? vs ! doesn't change the type, changes the usage
+    @IBOutlet weak var Delete: UIButton!
+    @IBOutlet weak var Display: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Display.adjustsFontSizeToFitWidth = true
+    }
     
     var UserIsInTheMiddleOfTypingANumber = false
     var userIsAboutToEnterANewCalculation = true
+    var lastNumberInDisplay: String = "" // used for commas
     
-//    var previousAnswer: Double? = nil;
-    
-    var numStr: String = ""
-    var displayIntStr: String = ""
-    //if the char pushed is an integer,
-    @IBAction func appendDigit(sender: UIButton) {
+    @IBAction func appendChar(sender: UIButton) {
+        // if user enters ".0" for first characters, it turns to "0"
         let char = sender.currentTitle!
  
-        if  userIsAboutToEnterANewCalculation && !brain.isOp(char) {
-                Display.text = char
+        if  userIsAboutToEnterANewCalculation && (brain.couldBePartOfNum(char) || brain.isUnaryOpChar(char)){
+            setDisplayText(char)
         } else {
-                Display.text = Display.text! + char
+            Display.text = Display.text! + char // TODO wrap in function
         }
         
+        // commas and stuff
         if brain.couldBePartOfNum(char) {
-            displayIntStr = displayIntStr + char
-            var numWithCommas = addCommas(displayIntStr)!
+            lastNumberInDisplay = lastNumberInDisplay + char
+            print("about to format: \(lastNumberInDisplay)")
+            var numWithCommas = formatNumber(lastNumberInDisplay)!
+            println("num with commas: \(numWithCommas)")
             replaceLastNumberInDisplay(numWithCommas)
         } else if brain.isOp(char) {
-            displayIntStr = ""
+            lastNumberInDisplay = ""
         }
         
         userIsAboutToEnterANewCalculation = false
+        Delete.setTitle("⌫", forState: .Normal)
         println("")
     }
     
-    func addCommas(number: String) -> String? {
+    private func formatNumber(number: String) -> String? {
         if number == "." {
             return number
         }
-        let nf = NSNumberFormatter()
-        nf.locale = locale
-        nf.numberStyle = NSNumberFormatterStyle.DecimalStyle
-        if let num = nf.stringFromNumber((number as NSString).doubleValue) {
+        if let num = addCommas((number as NSString).doubleValue) {
             if count(number) > 1 && number.substringFromIndex(advance(number.endIndex, -1)) == "." {
                 let ans = num + "."
                 return ans
@@ -79,84 +68,77 @@ class ViewController: UIViewController { // single inheritance only
         }
         return nil
     }
+    private func addCommas(number: Double) -> String? {
+        let nf = NSNumberFormatter()
+        nf.locale = locale
+        nf.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        return nf.stringFromNumber(number)
+    }
     
-    func replaceLastNumberInDisplay(replacement: String) {
+    private func replaceLastNumberInDisplay(replacement: String) {
         var text = Display.text!
+        print("current display text: \(text)")
         for (index, char) in enumerate(reverse(text)) {
             if !brain.couldBePartOfNum(String(char)) {
                 let range = advance(text.endIndex, (0-index))..<text.endIndex
                 text.replaceRange(range, with: replacement)
-                Display.text = text
+                setDisplayText(text)
                 return
             }
         }
-        Display.text = replacement
+        setDisplayText(replacement)
     }
-
-    
     
     @IBAction func deleteChar(sender: AnyObject) {
-//        replaceLastNumberInDisplay("")
-//        displayIntStr = ""
         let text = Display.text!
-        var newText = text.substringToIndex(text.endIndex.predecessor())
-        print(newText.endIndex)
-        if newText[newText.endIndex.predecessor()] == "," {
-            newText = newText.substringToIndex(text.endIndex.predecessor())
-        }
-        println("text: \(text) and newText: \(newText)")
-        if newText == "" || userIsAboutToEnterANewCalculation {
-            Display.text = "0"
-            userIsAboutToEnterANewCalculation = true
+        
+        if brain.couldBePartOfNum(String(text[text.endIndex.predecessor()])) {
+            replaceLastNumberInDisplay("")
+            lastNumberInDisplay = ""
         } else {
-            Display.text = newText
+            var newText = text.substringToIndex(text.endIndex.predecessor())
+            setDisplayText(newText)
         }
     }
     
     
     
     @IBAction func enter() {
-//        if UserIsInTheMiddleOfTypingANumber  {
-//            if let numFormat = NSNumberFormatter().numberFromString(numStr) {
-//                brain.pushOperand(numFormat.doubleValue)
-//            }
-//        }
-//        UserIsInTheMiddleOfTypingANumber = false
         convertToArray()
         var num = brain.evaluate()!
-        var displayStr = num.description
-        var end = displayStr.substringWithRange(Range<String.Index>(start: displayStr.endIndex.predecessor().predecessor(), end: displayStr.endIndex))
-        if end == ".0" {
-            Display.text = String(Int(num))
-        } else {
-            Display.text = num.description
-        }
-//        previousAnswer = num
+        setDisplayText(addCommas(num)!)
+        Delete.setTitle("C", forState: .Normal)
+        lastNumberInDisplay = ""
         userIsAboutToEnterANewCalculation = true
-        
     }
     private func convertToArray() {
-        if let expression = Display.text {
-            var numStr: String = ""
-            for (index, char) in enumerate(expression) {
-                let charStr = String(char)
-                if brain.isOp(charStr) && numStr != "" {
-                    println("current char: \(charStr) and number: \(numStr)")
-                    let num = (numStr as NSString).doubleValue
-//                    if num != 0.0 {
-                    brain.pushOperand(num)
-//                    }
-                    brain.pushOperation(charStr)
-                    numStr = ""
-                } else if brain.isOp(charStr) {
-                    brain.pushOperation(charStr)
-                } else {
-                    numStr = numStr + charStr
-                }
+        let expression = Display.text!
+        var numStr: String = ""
+        for (index, char) in enumerate(expression) {
+            let charStr = String(char)
+            if brain.isOp(charStr) && numStr != "" {
+                brain.pushOperand((numStr as NSString).doubleValue)
+                brain.pushOperation(charStr)
+                numStr = ""
+            } else if brain.isOp(charStr) {
+                brain.pushOperation(charStr)
+            } else if charStr != "," {
+                numStr = numStr + charStr
             }
-            if numStr != "" {
-                brain.pushOperand(NSNumberFormatter().numberFromString(numStr)!.doubleValue)
-            }
+        }
+        if numStr != "" {
+            brain.pushOperand((numStr as NSString).doubleValue)
+        }
+    }
+    
+    private func setDisplayText(val: String) {
+        if val == "" {
+            Display.text = "0"
+            userIsAboutToEnterANewCalculation = true
+            lastNumberInDisplay = ""
+            Delete.setTitle("C", forState: .Normal)
+        } else {
+            Display.text = val
         }
     }
 
