@@ -205,6 +205,9 @@ class CalculatorBrain {
 //        }
         return knownOps[op] != nil
     }
+//    func isNum(op: String) -> Bool {
+//        return knownOps[op] == nil
+//    }
     
     func pushOperation(op: String) {
         infixOpStack.append(knownOps[op]!)
